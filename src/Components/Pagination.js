@@ -2,8 +2,6 @@ import React from "react";
 import { Row, Button } from "./PaginationStyles";
 
 function Pagination({ pages, currentPage, handlePageChange, setCurrentPage }) {
-  console.log("pages", pages);
-  console.log("current page", currentPage);
   const pageNumbers = [...Array(pages + 1).keys()].slice(1);
   const handlePage = (key) => {
     if (key == "next") {

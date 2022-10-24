@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Trash } from "@styled-icons/ionicons-outline";
 
 export const Container = styled.div`
   width: 100%;
@@ -83,4 +84,9 @@ export const Loading = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 0;
+`;
+
+export const TrashIcon = styled(Trash)`
+  color: red;
+  cursor: pointer;
 `;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   Container,
   Table,
@@ -9,6 +10,7 @@ import {
   QueryFormat,
   Button,
   Loading,
+  TrashIcon,
 } from "./HomeScreenStyles";
 
 import Pagination from "./Pagination";
@@ -47,7 +49,6 @@ function HomeScreen() {
   const handleSort = () => {
     let sortedData = [...data];
     sortedData.sort((a, b) => (a.name > b.name ? 1 : -1));
-    console.log(sortedData);
     setFilteredData(sortedData);
     setData(sortedData);
     setCurrentPage(1);
@@ -68,6 +69,14 @@ function HomeScreen() {
 
   const handlePageChange = () => {
     setFilteredData(filteredData);
+  };
+
+  const handleDelete = (value) => {
+    let newArray = [...data];
+    newArray = newArray.filter((item) => item.id !== value.id);
+    setData(newArray);
+    setFilteredData(newArray);
+    setPages(Math.ceil(newArray.length / recordsPerPage));
   };
 
   useEffect(() => {
@@ -121,6 +130,9 @@ function HomeScreen() {
                       <Title big>{item.name}</Title>
                       <Title>{item.type}</Title>
                       <Title big>{item.description}</Title>
+                      <Title floatRight auto onClick={() => handleDelete(item)}>
+                        <TrashIcon size="16" />
+                      </Title>
                     </TableCell>
                     {expandedRow == item.id && (
                       <DetailedRow>
