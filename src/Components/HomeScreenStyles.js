@@ -39,6 +39,7 @@ export const Title = styled.div`
   text-align: left;
   padding-bottom: 6px;
   margin-left: ${(props) => (props.floatRight ? "auto" : "")};
+  pointer-events: ${(props) => (props.disabled == true ? "none" : "")};
 `;
 export const SearchWrapper = styled.div`
   padding: 1px 8px;

@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ChevronForward, ChevronDown } from "@styled-icons/ionicons-outline";
+import {
+  ChevronForward,
+  ChevronDown,
+  ArrowUndo,
+  ArrowRedo,
+} from "@styled-icons/ionicons-outline";
 
 import {
   Container,
@@ -29,6 +34,8 @@ function HomeScreen() {
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const [pages, setPages] = useState(0);
   const [edit, setEdit] = useState(null);
+  const [history, setHistory] = useState(null);
+  const [toggleRedo, setToggleRedo] = useState(false);
 
   let filterTimeout;
 
@@ -77,11 +84,14 @@ function HomeScreen() {
   };
 
   const handleDelete = (value) => {
-    let newArray = [...data];
+    let newArray = JSON.parse(JSON.stringify(data));
+    let itemIndex = newArray.findIndex((obj) => obj.id == value.id);
+    setHistory({ data: data[itemIndex], index: itemIndex, action: "delete" });
     newArray = newArray.filter((item) => item.id !== value.id);
     setData(newArray);
     setFilteredData(newArray);
     setPages(Math.ceil(newArray.length / recordsPerPage));
+    setToggleRedo(false);
   };
 
   const handleEdit = (item) => {
@@ -93,11 +103,40 @@ function HomeScreen() {
   };
 
   const handleUpdateDesc = () => {
-    let newArray = [...data];
+    let newArray = JSON.parse(JSON.stringify(data));
     let itemIndex = newArray.findIndex((obj) => obj.id == edit.id);
+    setHistory({ data: data[itemIndex], action: "edit" });
     newArray[itemIndex].description = edit.text;
     setData(newArray);
+    setFilteredData(newArray);
     setEdit(null);
+    setToggleRedo(false);
+  };
+
+  const handleHistory = () => {
+    let newArray = JSON.parse(JSON.stringify(data));
+    let itemIndex = newArray.findIndex((obj) => obj.id == history.data.id);
+    if (itemIndex != -1) {
+      if (history.action == "edit") {
+        newArray[itemIndex] = history.data;
+        setHistory({ data: data[itemIndex], action: "edit" });
+      } else {
+        setHistory({
+          data: data[itemIndex],
+          index: itemIndex,
+          action: "delete",
+        });
+        newArray = newArray.filter((item) => item.id !== history.data.id);
+        setData(newArray);
+        setFilteredData(newArray);
+      }
+    } else {
+      newArray.splice(history.index, 0, history.data);
+    }
+
+    setData(newArray);
+    setFilteredData(newArray);
+    setToggleRedo(!toggleRedo);
   };
 
   useEffect(() => {
@@ -119,13 +158,31 @@ function HomeScreen() {
               <Title floatRight auto button onClick={(e) => handleSort(e)}>
                 <Button>Sort A-Z</Button>
               </Title>
-              <SearchWrapper auto border>
+              <SearchWrapper border>
                 <SearchIcon size="14" />
                 <input
                   placeholder="Search"
                   onChange={(e) => debounceSearch(e)}
                 ></input>
               </SearchWrapper>
+              <Title
+                disabled={history === null ? true : false}
+                auto
+                button
+                onClick={() => handleHistory()}
+              >
+                {toggleRedo ? (
+                  <Button>
+                    <ArrowRedo size="13" />
+                    Redo
+                  </Button>
+                ) : (
+                  <Button>
+                    <ArrowUndo size="13" />
+                    Undo
+                  </Button>
+                )}
+              </Title>
             </TableCell>
             <TableCell size="13px" head>
               <Title small />
