@@ -21,6 +21,7 @@ function Pagination({ pages, currentPage, handlePageChange, setCurrentPage }) {
       <Button onClick={() => handlePage("prev")}>Prev page</Button>
       {pageNumbers.map((item) => (
         <Button
+          key={item}
           active={currentPage == item ? true : false}
           onClick={() => handlePage(item)}
         >

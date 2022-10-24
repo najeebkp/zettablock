@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Trash } from "@styled-icons/ionicons-outline";
+import { Trash, Search, Create } from "@styled-icons/ionicons-outline";
 
 export const Container = styled.div`
   width: 100%;
@@ -40,6 +40,19 @@ export const Title = styled.div`
   padding-bottom: 6px;
   margin-left: ${(props) => (props.floatRight ? "auto" : "")};
 `;
+export const SearchWrapper = styled.div`
+  padding: 1px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  border: 1px solid #f2f2f2;
+  height: fit-content;
+  input {
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+`;
 
 export const Row = styled.div`
   // display: flex;
@@ -71,10 +84,11 @@ export const Button = styled.div`
   font-size: 12px;
   border: 1px solid #f2f2f2;
 
-  background: ${(props) => (props.active ? "grey" : "")};
-  color: ${(props) => (props.active ? "white" : "grey")};
+  background: ${(props) => (props.variant == "success" ? "green" : "")};
+  color: ${(props) => (props.variant == "success" ? "white" : "grey")};
   &:hover {
-    background: ${(props) => (props.active ? "#8e8e8e" : "#f2f2f2")};
+    background: ${(props) =>
+      props.variant == "success" ? "darkgreen" : "#f2f2f2"};
   }
 `;
 
@@ -89,4 +103,12 @@ export const Loading = styled.div`
 export const TrashIcon = styled(Trash)`
   color: red;
   cursor: pointer;
+`;
+export const SearchIcon = styled(Search)`
+  cursor: pointer;
+`;
+export const PencilIcon = styled(Create)`
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: -5px;
 `;

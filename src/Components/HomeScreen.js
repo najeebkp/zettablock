@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ChevronForward, ChevronDown } from "@styled-icons/ionicons-outline";
 
 import {
   Container,
@@ -11,6 +12,9 @@ import {
   Button,
   Loading,
   TrashIcon,
+  SearchIcon,
+  SearchWrapper,
+  PencilIcon,
 } from "./HomeScreenStyles";
 
 import Pagination from "./Pagination";
@@ -24,6 +28,7 @@ function HomeScreen() {
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const [pages, setPages] = useState(0);
+  const [edit, setEdit] = useState(null);
 
   let filterTimeout;
 
@@ -79,6 +84,22 @@ function HomeScreen() {
     setPages(Math.ceil(newArray.length / recordsPerPage));
   };
 
+  const handleEdit = (item) => {
+    setEdit({ ...edit, id: item.id, text: item.description });
+  };
+
+  const handleEditDesc = (e) => {
+    setEdit({ ...edit, text: e.target.value });
+  };
+
+  const handleUpdateDesc = () => {
+    let newArray = [...data];
+    let itemIndex = newArray.findIndex((obj) => obj.id == edit.id);
+    newArray[itemIndex].description = edit.text;
+    setData(newArray);
+    setEdit(null);
+  };
+
   useEffect(() => {
     handlePageChange();
   }, [currentPage]);
@@ -98,12 +119,13 @@ function HomeScreen() {
               <Title floatRight auto button onClick={(e) => handleSort(e)}>
                 <Button>Sort A-Z</Button>
               </Title>
-              <Title auto>
+              <SearchWrapper auto border>
+                <SearchIcon size="14" />
                 <input
                   placeholder="Search"
                   onChange={(e) => debounceSearch(e)}
                 ></input>
-              </Title>
+              </SearchWrapper>
             </TableCell>
             <TableCell size="13px" head>
               <Title small />
@@ -122,14 +144,37 @@ function HomeScreen() {
               filteredData
                 .slice(indexOfFirstRecord, indexOfLastRecord)
                 .map((item, index) => (
-                  <>
+                  <React.Fragment key={index}>
                     <TableCell>
                       <Title small onClick={() => hanldeExpand(item.id)} button>
-                        {expandedRow == item.id ? "⌄" : ">"}
+                        {expandedRow == item.id ? (
+                          <ChevronDown size="14px" />
+                        ) : (
+                          <ChevronForward size="14px" />
+                        )}
                       </Title>
                       <Title big>{item.name}</Title>
                       <Title>{item.type}</Title>
-                      <Title big>{item.description}</Title>
+                      {edit && edit.id == item.id ? (
+                        <>
+                          <input
+                            value={edit.text}
+                            onChange={handleEditDesc}
+                          ></input>
+                          <Button variant="success" onClick={handleUpdateDesc}>
+                            Update
+                          </Button>
+                        </>
+                      ) : (
+                        <Title big>
+                          {item.description}{" "}
+                          <PencilIcon
+                            size="14"
+                            color="blue"
+                            onClick={() => handleEdit(item)}
+                          />
+                        </Title>
+                      )}
                       <Title floatRight auto onClick={() => handleDelete(item)}>
                         <TrashIcon size="16" />
                       </Title>
@@ -139,7 +184,7 @@ function HomeScreen() {
                         {Object.entries(item).map(
                           ([key, value]) =>
                             value && (
-                              <Row>
+                              <Row key={item.id}>
                                 <Title size="13px" head>
                                   {key}{" "}
                                 </Title>
@@ -161,7 +206,7 @@ function HomeScreen() {
                         )}
                       </DetailedRow>
                     )}
-                  </>
+                  </React.Fragment>
                 ))
             ) : (
               <div>No Data</div>
