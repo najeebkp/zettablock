@@ -7,7 +7,10 @@ import {
   DetailedRow,
   Row,
   QueryFormat,
+  Button,
+  Loading,
 } from "./HomeScreenStyles";
+
 import Pagination from "./Pagination";
 
 function HomeScreen() {
@@ -41,6 +44,15 @@ function HomeScreen() {
     }
   };
 
+  const handleSort = () => {
+    let sortedData = [...data];
+    sortedData.sort((a, b) => (a.name > b.name ? 1 : -1));
+    console.log(sortedData);
+    setFilteredData(sortedData);
+    setData(sortedData);
+    setCurrentPage(1);
+  };
+
   const debounceSearch = (e) => {
     clearTimeout(filterTimeout);
     filterTimeout = setTimeout(() => {
@@ -48,7 +60,6 @@ function HomeScreen() {
       filteredArray = filteredArray.filter((item) =>
         item.name.includes(e.target.value),
       );
-      // setFilteredFullData(filteredArray);
       setFilteredData(filteredArray);
       setPages(Math.ceil(filteredArray.length / recordsPerPage));
       setCurrentPage(1);
@@ -75,7 +86,10 @@ function HomeScreen() {
               <Title big size="17px">
                 API Table
               </Title>
-              <Title floatRight auto>
+              <Title floatRight auto button onClick={(e) => handleSort(e)}>
+                <Button>Sort A-Z</Button>
+              </Title>
+              <Title auto>
                 <input
                   placeholder="Search"
                   onChange={(e) => debounceSearch(e)}
@@ -148,7 +162,7 @@ function HomeScreen() {
           />
         </Container>
       ) : (
-        <div>Loading..</div>
+        <Loading>Loading..</Loading>
       )}
     </div>
   );

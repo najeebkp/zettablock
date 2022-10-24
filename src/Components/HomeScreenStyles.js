@@ -62,3 +62,25 @@ export const QueryFormat = styled.div`
   border-radius: 4px;
   white-space: pre;
 `;
+
+export const Button = styled.div`
+  padding: 3px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 12px;
+  border: 1px solid #f2f2f2;
+
+  background: ${(props) => (props.active ? "grey" : "")};
+  color: ${(props) => (props.active ? "white" : "grey")};
+  &:hover {
+    background: ${(props) => (props.active ? "#8e8e8e" : "#f2f2f2")};
+  }
+`;
+
+export const Loading = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+`;
