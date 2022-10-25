@@ -10,7 +10,7 @@ import {
   Container,
   Table,
   TableCell,
-  Title,
+  Block,
   DetailedRow,
   Row,
   QueryFormat,
@@ -39,6 +39,7 @@ function HomeScreen() {
 
   let filterTimeout;
 
+  // Data fetching
   const getData = async () => {
     await fetch("https://62a6bb9697b6156bff7e6251.mockapi.io/v1/apis")
       .then((res) => res.json())
@@ -50,6 +51,7 @@ function HomeScreen() {
       .catch((error) => console.log("Error"));
   };
 
+  // Row expand
   const hanldeExpand = (id) => {
     if (id == expandedRow) {
       SetExpandedRow(null);
@@ -58,6 +60,7 @@ function HomeScreen() {
     }
   };
 
+  // sorting
   const handleSort = () => {
     let sortedData = [...data];
     sortedData.sort((a, b) => (a.name > b.name ? 1 : -1));
@@ -66,6 +69,7 @@ function HomeScreen() {
     setCurrentPage(1);
   };
 
+  // search
   const debounceSearch = (e) => {
     clearTimeout(filterTimeout);
     filterTimeout = setTimeout(() => {
@@ -79,10 +83,12 @@ function HomeScreen() {
     }, 300);
   };
 
+  // page change
   const handlePageChange = () => {
     setFilteredData(filteredData);
   };
 
+  // delete row
   const handleDelete = (value) => {
     let newArray = JSON.parse(JSON.stringify(data));
     let itemIndex = newArray.findIndex((obj) => obj.id == value.id);
@@ -94,6 +100,7 @@ function HomeScreen() {
     setToggleRedo(false);
   };
 
+  // update description
   const handleEdit = (item) => {
     setEdit({ ...edit, id: item.id, text: item.description });
   };
@@ -113,6 +120,7 @@ function HomeScreen() {
     setToggleRedo(false);
   };
 
+  // undo/redo operation
   const handleHistory = () => {
     let newArray = JSON.parse(JSON.stringify(data));
     let itemIndex = newArray.findIndex((obj) => obj.id == history.data.id);
@@ -152,12 +160,12 @@ function HomeScreen() {
         <Container>
           <Table>
             <TableCell>
-              <Title big size="17px">
+              <Block big size="17px">
                 API Table
-              </Title>
-              <Title floatRight auto button onClick={(e) => handleSort(e)}>
+              </Block>
+              <Block floatRight auto button onClick={(e) => handleSort(e)}>
                 <Button>Sort A-Z</Button>
-              </Title>
+              </Block>
               <SearchWrapper border>
                 <SearchIcon size="14" />
                 <input
@@ -165,7 +173,7 @@ function HomeScreen() {
                   onChange={(e) => debounceSearch(e)}
                 ></input>
               </SearchWrapper>
-              <Title
+              <Block
                 disabled={history === null ? true : false}
                 auto
                 button
@@ -182,19 +190,19 @@ function HomeScreen() {
                     Undo
                   </Button>
                 )}
-              </Title>
+              </Block>
             </TableCell>
             <TableCell size="13px" head>
-              <Title small />
-              <Title big size="13px" head>
+              <Block small />
+              <Block big size="13px" head>
                 Name
-              </Title>
-              <Title size="13px" head>
+              </Block>
+              <Block size="13px" head>
                 Type
-              </Title>
-              <Title big size="13px" head>
+              </Block>
+              <Block big size="13px" head>
                 Description
-              </Title>
+              </Block>
             </TableCell>
 
             {filteredData.length > 0 ? (
@@ -203,15 +211,15 @@ function HomeScreen() {
                 .map((item, index) => (
                   <React.Fragment key={index}>
                     <TableCell>
-                      <Title small onClick={() => hanldeExpand(item.id)} button>
+                      <Block small onClick={() => hanldeExpand(item.id)} button>
                         {expandedRow == item.id ? (
                           <ChevronDown size="14px" />
                         ) : (
                           <ChevronForward size="14px" />
                         )}
-                      </Title>
-                      <Title big>{item.name}</Title>
-                      <Title>{item.type}</Title>
+                      </Block>
+                      <Block big>{item.name}</Block>
+                      <Block>{item.type}</Block>
                       {edit && edit.id == item.id ? (
                         <>
                           <input
@@ -223,18 +231,18 @@ function HomeScreen() {
                           </Button>
                         </>
                       ) : (
-                        <Title big>
+                        <Block big>
                           {item.description}{" "}
                           <PencilIcon
                             size="14"
                             color="blue"
                             onClick={() => handleEdit(item)}
                           />
-                        </Title>
+                        </Block>
                       )}
-                      <Title floatRight auto onClick={() => handleDelete(item)}>
+                      <Block floatRight auto onClick={() => handleDelete(item)}>
                         <TrashIcon size="16" />
-                      </Title>
+                      </Block>
                     </TableCell>
                     {expandedRow == item.id && (
                       <DetailedRow>
@@ -242,17 +250,17 @@ function HomeScreen() {
                           ([key, value]) =>
                             value && (
                               <Row key={item.id}>
-                                <Title size="13px" head>
+                                <Block size="13px" head>
                                   {key}{" "}
-                                </Title>
+                                </Block>
                                 {typeof value != "object" ? (
-                                  <Title auto>
+                                  <Block auto>
                                     {key == "query" ? (
                                       <QueryFormat>{value}</QueryFormat>
                                     ) : (
                                       value
                                     )}
-                                  </Title>
+                                  </Block>
                                 ) : (
                                   <QueryFormat>
                                     {JSON.stringify(value, null, 4)}
@@ -266,7 +274,7 @@ function HomeScreen() {
                   </React.Fragment>
                 ))
             ) : (
-              <div>No Data</div>
+              <Loading>No Data</Loading>
             )}
           </Table>
           <Pagination

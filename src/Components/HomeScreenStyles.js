@@ -29,7 +29,7 @@ export const DetailedRow = styled.div`
   flex-wrap: wrap;
   box-shadow: inset 0px 11px 8px -10px #ccc, inset 0px -11px 8px -10px #ccc;
 `;
-export const Title = styled.div`
+export const Block = styled.div`
   width: ${(props) =>
     props.big ? "300px" : props.small ? "40px" : props.auto ? "auto" : "100px"};
   color: ${(props) => (props.head ? "#696C70" : "#474B4F")};

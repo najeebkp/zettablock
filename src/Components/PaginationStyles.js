@@ -8,7 +8,6 @@ export const Row = styled.div`
 
 export const Button = styled.div`
   padding: 6px 10px;
-  // margin: 0 5px;
   cursor: pointer;
   font-size: 12px;
   background: ${(props) => (props.active ? "grey" : "")};

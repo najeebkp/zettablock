@@ -18,17 +18,21 @@ function Pagination({ pages, currentPage, handlePageChange, setCurrentPage }) {
   };
   return (
     <Row>
-      <Button onClick={() => handlePage("prev")}>Prev page</Button>
-      {pageNumbers.map((item) => (
-        <Button
-          key={item}
-          active={currentPage == item ? true : false}
-          onClick={() => handlePage(item)}
-        >
-          {item}
-        </Button>
-      ))}
-      <Button onClick={() => handlePage("next")}>Next page</Button>
+      {pages > 0 && (
+        <>
+          <Button onClick={() => handlePage("prev")}>Prev page</Button>
+          {pageNumbers.map((item) => (
+            <Button
+              key={item}
+              active={currentPage == item ? true : false}
+              onClick={() => handlePage(item)}
+            >
+              {item}
+            </Button>
+          ))}
+          <Button onClick={() => handlePage("next")}>Next page</Button>
+        </>
+      )}
     </Row>
   );
 }
